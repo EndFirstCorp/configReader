@@ -3,6 +3,7 @@ package configReader
 import (
 	"path/filepath"
 	"testing"
+	"time"
 )
 
 type ConfigTest struct {
@@ -25,6 +26,7 @@ type ConfigTest struct {
 	ConfigIsBogusDueToPrior             string
 	ConfigWithoutMoreQuotes             string
 	ConfigInt                           int
+	ConfigTime                          time.Time
 }
 
 type ConfigInvalid struct {
@@ -49,6 +51,7 @@ func TestReadBogusFile(t *testing.T) {
 
 func TestReadFile(t *testing.T) {
 	path, _ := filepath.Abs("configTest.conf")
+	expectedTime := time.Time{}
 	config := &ConfigTest{}
 	ReadFile(path, config)
 	expect(t, config.ConfigStandard, "value")
@@ -70,7 +73,10 @@ func TestReadFile(t *testing.T) {
 	expect(t, config.ConfigIsBogusDueToPrior, "bummer")
 	expect(t, config.ConfigWithoutMoreQuotes, "shouldTriggerError")
 	if config.ConfigInt != 12345 {
-		t.Fatalf("expected config |%i| = |%i|", config.ConfigInt, 12345)
+		t.Errorf("expected config |%i| = |%i|", config.ConfigInt, 12345)
+	}
+	if config.ConfigTime != expectedTime {
+		t.Errorf("Expected time to not get set")
 	}
 }
 

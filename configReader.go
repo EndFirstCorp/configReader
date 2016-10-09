@@ -21,7 +21,7 @@ func ReadFile(path string, outStruct interface{}) error {
 	re := regexp.MustCompile(`(?m)^\s*(\w*)\s*=\s*(["'](?:.|\n)*?["']|.*?)\s*$`)
 	matches := re.FindAllStringSubmatch(strings.Replace(string(data), "\r", "", -1), -1)
 	for _, group := range matches {
-		values[group[1]] = group[2]
+		values[strings.ToLower(group[1])] = group[2]
 	}
 	replaceVariables(values)
 	mapToStruct(values, outStruct)
@@ -30,9 +30,13 @@ func ReadFile(path string, outStruct interface{}) error {
 
 func mapToStruct(valueMap map[string]string, outPtr interface{}) {
 	outStruct := reflect.ValueOf(outPtr).Elem()
+	structType := outStruct.Type()
+	fields := make(map[string]reflect.Value)
+	for i := 0; i < outStruct.NumField(); i++ {
+		fields[strings.ToLower(structType.Field(i).Name)] = outStruct.Field(i)
+	}
 	for key, value := range valueMap {
-		publicName := strings.ToUpper(key[0:1]) + key[1:len(key)]
-		field := outStruct.FieldByName(publicName)
+		field := fields[key]
 		switch field.Kind() {
 		case reflect.String:
 			field.SetString(value)
@@ -72,8 +76,9 @@ func trimQuotes(value string) string {
 
 func replaceVariables(values map[string]string) {
 	for key, value := range values {
+		lowerVal := strings.ToLower(value)
 		// skip if string starts with ' or if there's nothing to replace
-		if strings.HasPrefix(value, "'") || !strings.Contains(value, "$") {
+		if strings.HasPrefix(value, "'") || !strings.Contains(lowerVal, "$") {
 			values[key] = trimQuotes(value)
 			continue
 		}
@@ -82,7 +87,7 @@ func replaceVariables(values map[string]string) {
 			if k1 == key {
 				continue
 			}
-			re := regexp.MustCompile(`\$\{*` + k1 + `\}*`)
+			re := regexp.MustCompile(`(?i)\$\{*` + k1 + `\}*`)
 			value = re.ReplaceAllString(value, v1)
 		}
 		values[key] = trimQuotes(value)
