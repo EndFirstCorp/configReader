@@ -73,7 +73,7 @@ func TestReadFile(t *testing.T) {
 	expect(t, config.ConfigIsBogusDueToPrior, "bummer")
 	expect(t, config.ConfigWithoutMoreQuotes, "shouldTriggerError")
 	if config.ConfigInt != 12345 {
-		t.Errorf("expected config |%i| = |%i|", config.ConfigInt, 12345)
+		t.Errorf("expected config |%d| = |%d|", config.ConfigInt, 12345)
 	}
 	if config.ConfigTime != expectedTime {
 		t.Errorf("Expected time to not get set")
