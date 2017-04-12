@@ -1,6 +1,7 @@
 package configReader
 
 import (
+	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -11,6 +12,9 @@ import (
 )
 
 func ReadFile(path string, outStruct interface{}) error {
+	if reflect.TypeOf(outStruct).Kind() != reflect.Ptr {
+		return errors.New("expected pointer to a struct for argument outStruct")
+	}
 	filename := getAbsPath(path)
 	values := make(map[string]string)
 	data, err := ioutil.ReadFile(filename)
