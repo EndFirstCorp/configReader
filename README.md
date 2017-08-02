@@ -1,5 +1,5 @@
 # Config Reader
-[![Build Status](https://travis-ci.org/EndFirstCorp/configReader.svg?branch=master)](https://travis-ci.org/EndFirstCorp/configReader) [![Coverage Status](https://coveralls.io/repos/github/EndFirstCorp/calendar/badge.svg?branch=master)](https://coveralls.io/github/EndFirstCorp/calendar?branch=master)
+[![Build Status](https://travis-ci.org/EndFirstCorp/configReader.svg?branch=master)](https://travis-ci.org/EndFirstCorp/configReader) [![Coverage Status](https://coveralls.io/repos/github/EndFirstCorp/configReader/badge.svg?branch=master)](https://coveralls.io/github/EndFirstCorp/configReader?branch=master)
 Simple Unix-style config file reader. Handles single-quotes, double-quotes, multi-line, $variable, #comment, etc
 
 ## Getting Started
